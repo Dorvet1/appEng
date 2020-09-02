@@ -1,3 +1,4 @@
+import 'package:appengenharia/bancoDeDados_2.dart';
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -5,9 +6,13 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'bancoDeDados.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
+import 'bancoDeDados_2.dart';
+
 final double _min = 0;
 final double _max = 60;
 double _value = 33;
+double numero = 0;
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,7 +36,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
@@ -40,18 +44,26 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
               children: <Widget>[
                 Container(
-                  height: 250,
-                  child: SfRadialGauge(
-                      enableLoadingAnimation: true,
-                      animationDuration: 3000,
-                      title: GaugeTitle(text: "Velocidade"),
-                      axes: <RadialAxis>[
-                        RadialAxis(
-                          minimum: 0,
-                          maximum:120,
-                        ),
-                      ]),
-                ),
+                    height: 250,
+                    child: SfRadialGauge(
+                        enableLoadingAnimation: true,
+                        animationDuration: 3000,
+                        title: GaugeTitle(text: "Velocidade"),
+                        axes: <RadialAxis>[
+                          RadialAxis(
+                              minimum: 0,
+                              maximum: 120,
+                              pointers: <GaugePointer>[
+                                NeedlePointer(value: numero)
+                              ],
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                  widget: Container(child: Text("90")),
+                                  angle: 90,
+                                  positionFactor: 0.5,
+                                )
+                              ])
+                        ])),
                 Divider(),
                 Text("Temperatura"),
                 Container(
@@ -65,13 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                     primaryXAxis: CategoryAxis(),
                     series: <ChartSeries>[
                       LineSeries<SalesData, String>(
-                        dataSource: [
-                          SalesData(" 1", 10),
-                          SalesData(" 2", 2),
-                          SalesData(" 3", 50),
-                          SalesData(" 4", 730),
-                          SalesData(" 5", 10),
-                        ],
+                        dataSource: [],
                         xValueMapper: (SalesData sales, _) => sales.year,
                         yValueMapper: (SalesData sales, _) => sales.sales,
                       )
@@ -80,25 +86,23 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Divider(),
                 Text("Combustivel"),
-              Container(
-                width: 50,
-                height: 150,
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  series: <CartesianSeries>[
-                    ColumnSeries<SalesData, String>(
-                      dataSource: [
-                      SalesData (" ", 2),
-                    ],
-                    xValueMapper: (SalesData sales,_)=>sales.year,
-                    yValueMapper: (SalesData sales, _)=> sales.sales,
-                    )
-                   
-                  ]
-
-                ),
-              )],)
-            )));
+                Container(
+                  width: 50,
+                  height: 150,
+                  child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      series: <CartesianSeries>[
+                        ColumnSeries<SalesData, String>(
+                          dataSource: [
+                            SalesData(" ", 2),
+                          ],
+                          xValueMapper: (SalesData sales, _) => sales.year,
+                          yValueMapper: (SalesData sales, _) => sales.sales,
+                        )
+                      ]),
+                )
+              ],
+            ))));
   }
 }
 

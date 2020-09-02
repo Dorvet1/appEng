@@ -37,13 +37,13 @@ class DataBaseHelper{
     await db.execute('CREATE TABLE $engTable($colId INTEGER PRIMARY KEY AUTOINCREMENTE,$colNome TEXT,'' $colValue INTEGER)');
 
   }
-Future<int> insertBd( BancoDeDados dados) async{
+ Future<int> insertBd( BancoDeDados dados) async{
   Database db = await this.database;
   var resultado = await db.insert (engTable, dados.tomap());
   return resultado;
-}
+ }
 //inserir resultado 
-Future< BancoDeDados> getDado( int id) async{
+ Future< BancoDeDados> getDado( int id) async{
 
   Database db= await this.database;
   List<Map> maps= await db.query(engTable, columns: [colId, colNome, colValue],
@@ -55,6 +55,15 @@ Future< BancoDeDados> getDado( int id) async{
   else{
     return null;
   }
+
+  }
+  Future<List<BancoDeDados>>getDados() async{
+    Database db= await  this.database;
+    var resultado = await db.query(engTable);
+    List<BancoDeDados> lista= resultado.isNotEmpty ? resultado.map(
+      (c)=> BancoDeDados.fromMap(c)).toList():[];
+      return lista;
+    
   }
   //atualizar objetos
   Future< int> updadeDados ( BancoDeDados dados) async{
